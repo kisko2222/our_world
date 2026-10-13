@@ -1,0 +1,19 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isOneOfOurTwo() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in [
+          'you@example.com',
+          'girlfriend@example.com'
+        ];
+    }
+
+    match /couples/{coupleId}/{collection}/{documentId} {
+      allow read, create, update, delete: if coupleId == 'main'
+        && collection in ['settings', 'memories', 'letters', 'bucket']
+        && isOneOfOurTwo();
+    }
+  }
+}
