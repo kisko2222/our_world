@@ -305,7 +305,12 @@ function App() {
     setError('')
     setSaving(true)
     try {
-      await signIn(loginEmail, loginPassword)
+      const result = await signIn(loginEmail, loginPassword)
+      if (result.verificationSent) {
+        setLoginPassword('')
+        setNotice('A verification link was sent. Check your inbox and spam folder, open the link, then sign in again ♡')
+        return
+      }
       setLoginOpen(false)
       setLoginPassword('')
       setNotice('Welcome to your shared little world ♡')
@@ -500,7 +505,7 @@ function App() {
       <label>kind of note<select value={letterDraft.type} onChange={(event) => setLetterDraft({ ...letterDraft, type: event.target.value })}><option>love letter</option><option>open when</option><option>monthsary</option><option>sweet note</option><option>secret letter</option></select></label>
       <label>your letter<textarea required rows={6} value={letterDraft.message} onChange={(event) => setLetterDraft({ ...letterDraft, message: event.target.value })} placeholder="Write something only you could say..." /></label><button className="button button-primary">fold it with love ♡</button></form></Modal>}</AnimatePresence>
     <AnimatePresence>{loginOpen && <Modal title="just for our two hearts" close={() => setLoginOpen(false)}><form className="edit-form" onSubmit={(event) => void handleLogin(event)}>
-      <p className="login-explainer">Sign in with an account you created in Firebase Authentication. There is no public sign-up form; only the two configured email accounts can access shared content.</p>
+      <p className="login-explainer">Sign in with one of the two accounts created in Firebase Authentication. If its email is not verified yet, we will send a verification link to that inbox. Open the link, then sign in again.</p>
       <label>email<input type="email" autoComplete="username" required value={loginEmail} onChange={(event) => setLoginEmail(event.target.value)} /></label><label>password<input type="password" autoComplete="current-password" required value={loginPassword} onChange={(event) => setLoginPassword(event.target.value)} /></label><button className="button button-primary" disabled={saving}>{saving ? 'opening your scrapbook...' : 'sign in ♡'}</button></form></Modal>}</AnimatePresence>
     <AnimatePresence>{profileOpen && <Modal title="our little details" close={() => setProfileOpen(false)}><form className="edit-form" onSubmit={(event) => { event.preventDefault(); updateSettings(settings); setProfileOpen(false) }}>
       <label>your name or nickname<input value={settings.you} onChange={(event) => setSettings({ ...settings, you: event.target.value })} /></label><label>their name or nickname<input value={settings.sweetheart} onChange={(event) => setSettings({ ...settings, sweetheart: event.target.value })} /></label>

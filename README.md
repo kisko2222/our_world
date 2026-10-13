@@ -36,11 +36,11 @@ Memory photos are added using an image URL, not an upload. The image host contro
 Create a Firebase project at [Firebase Console](https://console.firebase.google.com/). This project uses **Authentication** and **Cloud Firestore** only; it does not use Firebase Storage or require configuring Storage or Storage rules. The web API key in a Vite app is a client identifier, not an admin credential. Privacy is enforced by Firebase Authentication and Firestore security rules. Never add a service-account key to this project.
 
 1. In **Authentication → Sign-in method**, enable **Email/Password**. The site has sign-in only and does not allow public registration.
-2. In **Authentication → Users**, manually create exactly your two accounts with email and password. Verify both email addresses before using the app.
+2. In **Authentication → Users**, manually create exactly your two accounts with email and password. Both account owners need access to their inboxes to verify their addresses.
 3. In **Firestore Database**, create a database. Open **Rules**, replace both placeholder email addresses in `firestore.rules` with the two verified account emails, then publish the rules.
 4. Add a Web app in **Project settings** and copy its Firebase configuration.
 5. In the workspace, copy `.env.example` to `.env.local`. In VS Code you can right-click `.env.example` and choose **Copy**, then paste and rename the copy to `.env.local`. Fill in the five Firebase values from the Web app settings. Set `VITE_ALLOWED_EMAILS` to the same two comma-separated verified addresses, for example `you@example.com,girlfriend@example.com`.
-6. Save `.env.local`, stop and restart `npm run dev`, and click **sign in**. Sign in with either manually-created account. The client email list improves the sign-in experience; Firestore rules are the actual database access control.
+6. Save `.env.local`, stop and restart `npm run dev`, and click **sign in**. Sign in with either manually-created account. If that account is not verified yet, the site sends a verification link to its inbox and asks you to sign in again after opening the link. The client email list improves the sign-in experience; Firestore rules are the actual database access control.
 7. For deployment, add the same `VITE_FIREBASE_*` values and `VITE_ALLOWED_EMAILS` as GitHub Actions variables, as described below. Also add `localhost` and your GitHub Pages domain to Firebase **Authentication → Settings → Authorized domains**.
 
 The app never creates accounts. Firebase's rules independently reject all accounts except the two exact, verified emails you put in the rules. Do not publish the app until you have replaced the example emails in `firestore.rules`.

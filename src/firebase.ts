@@ -28,8 +28,10 @@ export function watchAuth(callback: (user: User | null) => void) {
     if (!cancelled) unsubscribe = client.watchAuth((user) => {
       if (!user) {
         callback(null)
-      } else if (user.emailVerified && allowedEmails.includes(user.email?.toLowerCase() ?? '')) {
+      } else if (allowedEmails.includes(user.email?.toLowerCase() ?? '') && user.emailVerified) {
         callback(user)
+      } else if (!user.emailVerified && allowedEmails.includes(user.email?.toLowerCase() ?? '')) {
+        callback(null)
       } else {
         callback(null)
         void client.signOutUser().catch(reportLoadFailure)
@@ -50,10 +52,14 @@ export async function signIn(email: string, password: string) {
   const client = await loadFirebase()
   const credential = await client.signIn(email.trim(), password)
   if (!credential.user.emailVerified) {
-    await client.signOutUser()
-    throw new Error('Verify your email address before opening the shared scrapbook.')
+    try {
+      await client.sendVerificationEmail(credential.user)
+    } finally {
+      await client.signOutUser()
+    }
+    return { verificationSent: true as const }
   }
-  return credential
+  return { verificationSent: false as const, credential }
 }
 
 export async function signOutUser() {
