@@ -10,10 +10,30 @@ service cloud.firestore {
         ];
     }
 
-    match /couples/{coupleId}/{collection}/{documentId} {
-      allow read, create, update, delete: if coupleId == 'main'
+    function isSharedCollection(coupleId, collection) {
+      return coupleId == 'main'
         && collection in ['settings', 'memories', 'letters', 'bucket']
         && isOneOfOurTwo();
+    }
+
+    match /couples/{coupleId}/{collection}/{documentId} {
+      allow read: if isSharedCollection(coupleId, collection);
+      allow create: if isSharedCollection(coupleId, collection)
+        && (collection != 'letters'
+          || request.resource.data.authorEmail == request.auth.token.email);
+      allow update: if isSharedCollection(coupleId, collection)
+        && (collection != 'letters'
+          || (
+            resource.data.keys().hasAny(['authorEmail'])
+            && request.resource.data.authorEmail == resource.data.authorEmail
+          )
+          || (
+            !resource.data.keys().hasAny(['authorEmail'])
+            && !request.resource.data.keys().hasAny(['authorEmail'])
+          ));
+      allow delete: if isSharedCollection(coupleId, collection)
+        && (collection != 'letters'
+          || resource.data.authorEmail == request.auth.token.email);
     }
   }
 }

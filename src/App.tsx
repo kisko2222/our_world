@@ -2,8 +2,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import {
   ArrowRight, Check, ChevronDown, CircleHelp, Clock3, Cloud, CloudOff, Flower2,
   Gamepad2, Heart, ImagePlus, ListChecks, LockKeyhole, Mail, Music2, Pause, Play,
-  Plus, RotateCcw, Settings2, Shuffle, SkipBack, SkipForward, Sparkles, Volume2,
-  VolumeX, X,
+  Plus, RotateCcw, Settings2, Shuffle, SkipBack, SkipForward, Sparkles, Trash2,
+  Volume2, VolumeX, X,
 } from 'lucide-react'
 import {
   useCallback, useEffect, useRef, useState, type FormEvent, type PointerEvent,
@@ -16,7 +16,10 @@ import {
 
 type Page = 'home' | 'memories' | 'letters' | 'date' | 'games' | 'bucket' | 'monthsary'
 type Memory = { id: string; title: string; date: string; caption: string; photo: string }
-type Letter = { id: string; title: string; type: string; message: string; locked?: boolean }
+type Letter = {
+  id: string; title: string; type: string; message: string; locked?: boolean;
+  authorEmail?: string; audioId?: string
+}
 type BucketItem = { id: string; text: string; done: boolean }
 type Song = { id: string; title: string; url: string; bundled: true; cover?: string }
 type QuizQuestion = { question: string; options: string[]; answer: number }
@@ -352,9 +355,33 @@ function App() {
   const saveLetter = (event: FormEvent) => {
     event.preventDefault()
     if (!letterDraft) return
-    setLetters((old) => [letterDraft, ...old.filter((entry) => entry.id !== letterDraft.id)])
-    void cloudSave('letters', letterDraft.id, letterDraft)
+    const item = { ...letterDraft }
+    if (!letters.some((letter) => letter.id === item.id) && user?.email) {
+      item.authorEmail = user.email
+    }
+    setLetters((old) => [item, ...old.filter((entry) => entry.id !== item.id)])
+    void cloudSave('letters', item.id, item)
     setLetterDraft(null)
+  }
+  const removeLetter = async (letter: Letter) => {
+    if (firebaseConfigured && (!user?.email ||
+      letter.authorEmail?.toLowerCase() !== user.email.toLowerCase())) {
+      setError('Only the email that sent this note can remove it.')
+      return
+    }
+    if (!window.confirm(`Remove "${letter.title}"? This cannot be undone.`)) return
+    if (firebaseConfigured) {
+      try {
+        await removeSharedRecord('letters', letter.id)
+      } catch (reason) {
+        const detail = reason instanceof Error ? reason.message : 'Unknown sync error'
+        setError(`Firestore could not remove this note: ${detail}.`)
+        return
+      }
+    }
+    setLetters((old) => old.filter((item) => item.id !== letter.id))
+    setLetterOpen(null)
+    setNotice('Removed this love note.')
   }
   const addBucketItem = (event: FormEvent) => {
     event.preventDefault()
@@ -398,7 +425,6 @@ function App() {
           <span className="hero-sprig sprig-left">✿</span><span className="hero-sprig sprig-right">✿</span>
           <span className="eyebrow">a little place for our big feelings</span>
           <h1>our little<br /><em>world</em> <span className="title-heart">♡</span></h1>
-          <div className="names-line">{settings.you} <span>and</span> {settings.sweetheart}</div>
           <p className="hero-message">{settings.welcome}</p>
           <div className="hero-actions"><button className="button button-primary" onClick={() => navigate('memories')}>wander through our memories <ArrowRight size={16} /></button>
             <button className="button button-soft" onClick={() => setSecret('A little squeeze from me to you. Close your eyes and imagine a hug. ♡')}>open me <Heart size={15} fill="currentColor" /></button>
@@ -438,7 +464,6 @@ function App() {
         <div className="letter-grid">{letters.map((letter) => <motion.button whileHover={{ y: -4, rotate: -1 }} className="envelope-card" key={letter.id} onClick={() => setLetterOpen(letter)}>
           <span className="envelope-type">{letter.type}</span><span className="envelope-flap">♡</span><b>{letter.title}</b><small>tap to open · with love</small></motion.button>)}
           <button className="envelope-card envelope-compliment" onClick={showCompliment}><span className="envelope-type">a little surprise</span><span className="envelope-flap">✧</span><b>pick me up?</b><small>pull out a random compliment</small></button></div>
-        {letters.length > 0 && <div className="manage-list">{letters.map((letter) => <div key={letter.id}><span>{letter.title}</span><button onClick={() => setLetterDraft(letter)}>edit</button><button onClick={() => { setLetters((old) => old.filter((item) => item.id !== letter.id)); void cloudDelete('letters', letter.id) }}>remove</button></div>)}</div>}
       </section>}
 
       {page === 'date' && <section className="page-section">
@@ -492,7 +517,23 @@ function App() {
 
     <AnimatePresence>{secret && <Modal title="a little something for you" close={() => setSecret('')}><div className="secret-message"><span>💌</span><p>{secret}</p><Heart size={19} fill="currentColor" /></div></Modal>}</AnimatePresence>
     <AnimatePresence>{compliment && <Modal title="one tiny truth" close={() => setCompliment('')}><div className="secret-message"><span>🌷</span><p>{compliment}</p><button className="button button-soft" onClick={showCompliment}>one more ♡</button></div></Modal>}</AnimatePresence>
-    <AnimatePresence>{letterOpen && <Modal title={letterOpen.title} close={() => setLetterOpen(null)}><div className="letter-paper"><span className="handwritten">my dearest,</span><p>{letterOpen.message}</p><span className="handwritten signature">always yours ♡</span></div></Modal>}</AnimatePresence>
+    <AnimatePresence>{letterOpen && <Modal title={letterOpen.title} close={() => setLetterOpen(null)}><div className="letter-paper"><span className="handwritten">my dearest,</span><p>{letterOpen.message}</p><span className="handwritten signature">always yours ♡</span>
+      {letterOpen.audioId && (() => {
+        const song = allSongs.find((item) => item.id === letterOpen.audioId)
+        return song
+          ? <div className="letter-audio"><span><Music2 size={15} /> {song.title}</span><audio controls preload="none" src={song.url} aria-label={`Play ${song.title} with this love note`} /></div>
+          : <p className="letter-audio-unavailable">This note's song is not available in the current playlist.</p>
+      })()}
+      <div className="letter-actions"><button className="button button-soft" onClick={() => { setLetterDraft(letterOpen); setLetterOpen(null) }}>edit note</button>
+        {(!firebaseConfigured || Boolean(user?.email &&
+          letterOpen.authorEmail?.toLowerCase() === user.email.toLowerCase())) &&
+          <button className="button button-quiet letter-remove" onClick={() => void removeLetter(letterOpen)}><Trash2 size={15} /> remove note</button>}
+      </div>
+      {firebaseConfigured && user?.email?.toLowerCase() !== letterOpen.authorEmail?.toLowerCase() &&
+        <small className="letter-owner-note">{letterOpen.authorEmail
+          ? `Only ${letterOpen.authorEmail} can remove this note.`
+          : 'This older note has no sender recorded, so it cannot be removed.'}</small>}
+    </div></Modal>}</AnimatePresence>
     <AnimatePresence>{photoOpen && <Modal title={photoOpen.title || 'one of our little moments'} close={() => setPhotoOpen(null)}><div className="photo-viewer">{photoOpen.photo ? <img src={photoOpen.photo} alt={photoOpen.title} /> : <span>♡</span>}<p>{photoOpen.caption}</p><small>{photoOpen.date}</small></div></Modal>}</AnimatePresence>
     <AnimatePresence>{memoryDraft && <Modal title={memoryDraft.title ? 'edit this memory' : 'add a little memory'} close={() => setMemoryDraft(null)}><form className="edit-form" onSubmit={saveMemory}>
       <label>title<input required value={memoryDraft.title} onChange={(event) => setMemoryDraft({ ...memoryDraft, title: event.target.value })} placeholder="a day we want to remember" /></label>
@@ -503,7 +544,10 @@ function App() {
     <AnimatePresence>{letterDraft && <Modal title={letterDraft.title ? 'edit a love note' : 'write a little love note'} close={() => setLetterDraft(null)}><form className="edit-form" onSubmit={saveLetter}>
       <label>envelope title<input required value={letterDraft.title} onChange={(event) => setLetterDraft({ ...letterDraft, title: event.target.value })} placeholder="open when you need a smile" /></label>
       <label>kind of note<select value={letterDraft.type} onChange={(event) => setLetterDraft({ ...letterDraft, type: event.target.value })}><option>love letter</option><option>open when</option><option>monthsary</option><option>sweet note</option><option>secret letter</option></select></label>
-      <label>your letter<textarea required rows={6} value={letterDraft.message} onChange={(event) => setLetterDraft({ ...letterDraft, message: event.target.value })} placeholder="Write something only you could say..." /></label><button className="button button-primary">fold it with love ♡</button></form></Modal>}</AnimatePresence>
+      <label>your letter<textarea required rows={6} value={letterDraft.message} onChange={(event) => setLetterDraft({ ...letterDraft, message: event.target.value })} placeholder="Write something only you could say..." /></label>
+      <label>song for this note<select value={letterDraft.audioId ?? ''} onChange={(event) => setLetterDraft({ ...letterDraft, audioId: event.target.value || undefined })}><option value="">no song</option>{allSongs.map((song) => <option key={song.id} value={song.id}>{song.title}</option>)}</select></label>
+      <small className="letter-audio-help">{allSongs.length ? 'Choose a song from the site playlist. Playlist audio is public with the website.' : 'Add MP3s to public/audio and list them in playlist.json to enable song choices.'}</small>
+      <button className="button button-primary">fold it with love ♡</button></form></Modal>}</AnimatePresence>
     <AnimatePresence>{loginOpen && <Modal title="just for our two hearts" close={() => setLoginOpen(false)}><form className="edit-form" onSubmit={(event) => void handleLogin(event)}>
       <p className="login-explainer">Sign in with one of the two accounts created in Firebase Authentication. If its email is not verified yet, we will send a verification link to that inbox. Open the link, then sign in again.</p>
       <label>email<input type="email" autoComplete="username" required value={loginEmail} onChange={(event) => setLoginEmail(event.target.value)} /></label><label>password<input type="password" autoComplete="current-password" required value={loginPassword} onChange={(event) => setLoginPassword(event.target.value)} /></label><button className="button button-primary" disabled={saving}>{saving ? 'opening your scrapbook...' : 'sign in ♡'}</button></form></Modal>}</AnimatePresence>

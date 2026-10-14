@@ -25,9 +25,9 @@ Without Firebase, scrapbook entries and preferences stay in that browser's local
    }
    ```
 
-3. Save the file and refresh the site. While developing, run `npm run dev`; the tracks appear in the player playlist as **site folder**.
+3. Save the file and refresh the site. While developing, run `npm run dev`; the tracks appear in the player playlist and in the song selector when writing or editing a love note.
 
-MP3s in `public/audio/` are included in the built website and are publicly accessible to anyone who can access the site. There is no in-browser music upload, local-file player, or private music sharing. Only add music that you own or have permission to publish. After adding tracks, rebuild and push the changes to GitHub to update the deployed site.
+MP3s in `public/audio/` are included in the built website and are publicly accessible to anyone who can access the site. A love note can select one of these tracks to play with the message; selecting a track does not upload or privately share it. There is no in-browser music upload, local-file player, or private music sharing. Only add music that you own or have permission to publish. After adding tracks, rebuild and push the changes to GitHub to update the deployed site.
 
 Memory photos are added using an image URL, not an upload. The image host controls access to the image, so use links you are comfortable sharing.
 
@@ -43,7 +43,7 @@ Create a Firebase project at [Firebase Console](https://console.firebase.google.
 6. Save `.env.local`, stop and restart `npm run dev`, and click **sign in**. Sign in with either manually-created account. If that account is not verified yet, the site sends a verification link to its inbox and asks you to sign in again after opening the link. The client email list improves the sign-in experience; Firestore rules are the actual database access control.
 7. For deployment, add the same `VITE_FIREBASE_*` values and `VITE_ALLOWED_EMAILS` as GitHub Actions variables, as described below. Also add `localhost` and your GitHub Pages domain to Firebase **Authentication → Settings → Authorized domains**.
 
-The app never creates accounts. Firebase's rules independently reject all accounts except the two exact, verified emails you put in the rules. Do not publish the app until you have replaced the example emails in `firestore.rules`.
+The app never creates accounts. Firebase's rules independently reject all accounts except the two exact, verified emails you put in the rules. Love notes record the verified sender's email, and only that sender can remove the note; editing a note cannot change its recorded sender. Existing notes without a recorded sender cannot be removed. Publish the updated `firestore.rules` in Firebase for the sender-only removal check to be enforced by Firestore. Do not publish the app until you have replaced the example emails in `firestore.rules`.
 
 ### What gets shared
 

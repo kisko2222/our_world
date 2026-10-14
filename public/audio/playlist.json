@@ -1,3 +1,11 @@
 {
-  "songs": []
+  "songs": [
+    { "title": "Damned", "file": "damned.mp3" },
+    { "title": "Falling for You", "file": "fallingforyou.mp3" },
+    { "title": "Love Songs", "file": "Love_Songs.mp3" },
+    { "title": "Mahika", "file": "mahika.mp3" },
+    { "title": "Oh Giliw", "file": "Oh__Giliw.mp3" },
+    { "title": "Paraluman", "file": "Paraluman.mp3" },
+    { "title": "Sure Thing", "file": "Sure_Thing.mp3" }
+  ]
 }
