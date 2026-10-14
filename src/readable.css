@@ -1,0 +1,162 @@
+.hero-card h1,
+.page-heading h2,
+.modal-card > h3,
+.auth-required h2 {
+  font-family: "Nunito", "DM Sans", sans-serif;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.welcome-note p,
+.polaroid-caption,
+.memory-meta h3,
+.empty-state h3,
+.envelope-card b,
+.date-card p,
+.compliment-card p,
+.quiz-question,
+.answer-feedback,
+.game-result h3,
+.catch-intro b,
+.monthsary-card h3,
+.month-intro,
+.handwritten,
+.final-letter p,
+.letter-paper p,
+.secret-message p,
+.photo-viewer p {
+  font-family: "Nunito", "DM Sans", sans-serif;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+body {
+  font-family: "Nunito", "DM Sans", sans-serif;
+  line-height: 1.55;
+}
+
+p,
+li,
+label,
+small {
+  font-size: max(13px, 0.875em) !important;
+}
+
+input,
+textarea,
+select {
+  font-size: 14px !important;
+  line-height: 1.5;
+}
+
+.page-heading h2 {
+  font-size: 38px;
+}
+
+.hero-message,
+.page-heading p,
+.memory-meta p,
+.empty-state p,
+.envelope-card small,
+.helper-line,
+.login-explainer,
+.auth-required p,
+.photo-viewer small,
+.setup-note,
+.toast {
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.edit-form label,
+.monthsary-edit label,
+.customize-row label,
+.text-link,
+.card-tools button,
+.manage-list button,
+.item-edit,
+.item-delete,
+.game-tabs > button,
+.quiz-options button,
+.game-result p,
+.match-score,
+.catch-hud,
+.bucket-item > span,
+.progress-label,
+.date-label,
+.envelope-type,
+.privacy-pill,
+.quick-links b,
+.quick-links small {
+  font-size: 13px;
+}
+
+input,
+textarea,
+select,
+.edit-form input,
+.edit-form textarea,
+.edit-form select,
+.monthsary-edit input,
+.monthsary-edit textarea {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+button {
+  line-height: 1.4;
+}
+
+.welcome-note p,
+.date-card p,
+.compliment-card p,
+.quiz-question,
+.final-letter p,
+.letter-paper p,
+.secret-message p,
+.photo-viewer p {
+  font-size: 16px;
+}
+
+.page-heading p,
+.hero-message {
+  line-height: 1.65;
+}
+
+@media (max-width: 600px) {
+  .page-heading h2 { font-size: 32px; }
+  .page-heading p,
+  .memory-meta p,
+  .empty-state p,
+  .envelope-card small,
+  .helper-line,
+  .login-explainer,
+  .auth-required p,
+  .hero-message { font-size: 13px; }
+
+  .edit-form label,
+  .monthsary-edit label,
+  .customize-row label,
+  .text-link,
+  .card-tools button,
+  .manage-list button,
+  .item-edit,
+  .item-delete,
+  .game-tabs > button,
+  .quiz-options button,
+  .game-result p,
+  .match-score,
+  .catch-hud,
+  .bucket-item > span,
+  .progress-label,
+  .privacy-pill { font-size: 12px; }
+
+  .welcome-note p,
+  .date-card p,
+  .compliment-card p,
+  .quiz-question,
+  .final-letter p,
+  .letter-paper p,
+  .secret-message p,
+  .photo-viewer p { font-size: 15px; }
+}
