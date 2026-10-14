@@ -22,9 +22,14 @@
 }
 
 body {
-  font-family: "DM Sans", "Nunito", sans-serif;
-  font-style: italic;
+  font-family: "Caveat", cursive;
+  font-style: normal;
   line-height: 1.55;
+}
+
+body,
+body *:not(svg):not(svg *) {
+  font-family: "Caveat", cursive !important;
 }
 
 p,
@@ -32,6 +37,10 @@ li,
 label,
 small {
   font-size: max(13px, 0.875em);
+}
+
+small {
+  font-size: max(12px, 0.875em);
 }
 
 input,
