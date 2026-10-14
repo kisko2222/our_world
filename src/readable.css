@@ -32,130 +32,53 @@ body *:not(svg):not(svg *) {
   font-family: "Caveat", cursive !important;
 }
 
-p,
-li,
-label,
-small {
-  font-size: max(13px, 0.875em);
+body {
+  font-size: clamp(16px, 1.1vw, 18px);
 }
 
-small {
-  font-size: max(12px, 0.875em);
+p,
+li {
+  font-size: clamp(16px, 1.1vw, 18px) !important;
+  line-height: 1.6;
+}
+
+label,
+small,
+.sync-label,
+.nav-link,
+.button,
+.text-link,
+.privacy-pill,
+.eyebrow,
+.tiny-label,
+.card-kicker,
+.date-label,
+.envelope-type,
+.card-tools button,
+.manage-list button,
+.game-tabs > button,
+.quiz-options button,
+.item-edit,
+.item-delete,
+.toast,
+.setup-note,
+.counter-card b,
+.counter-card small,
+.quick-links b,
+.quick-links small,
+.song-label b,
+.song-label small {
+  font-size: clamp(14px, 0.95vw, 16px) !important;
+  line-height: 1.45;
 }
 
 input,
 textarea,
 select {
-  font-size: 14px !important;
-  line-height: 1.5;
-}
-
-.page-heading h2 {
-  font-size: 38px;
-}
-
-.hero-message,
-.page-heading p,
-.memory-meta p,
-.empty-state p,
-.envelope-card small,
-.helper-line,
-.login-explainer,
-.auth-required p,
-.photo-viewer small,
-.setup-note,
-.toast {
-  font-size: 14px;
-  line-height: 1.65;
-}
-
-.edit-form label,
-.monthsary-edit label,
-.customize-row label,
-.text-link,
-.card-tools button,
-.manage-list button,
-.item-edit,
-.item-delete,
-.game-tabs > button,
-.quiz-options button,
-.game-result p,
-.match-score,
-.catch-hud,
-.bucket-item > span,
-.progress-label,
-.date-label,
-.envelope-type,
-.privacy-pill,
-.quick-links b,
-.quick-links small {
-  font-size: 13px;
-}
-
-input,
-textarea,
-select,
-.edit-form input,
-.edit-form textarea,
-.edit-form select,
-.monthsary-edit input,
-.monthsary-edit textarea {
-  font-size: 14px;
+  font-size: 16px !important;
   line-height: 1.5;
 }
 
 button {
   line-height: 1.4;
-}
-
-.date-card p,
-.compliment-card p,
-.quiz-question {
-  font-size: 16px;
-}
-
-.page-heading p,
-.hero-message {
-  line-height: 1.65;
-}
-
-@media (max-width: 600px) {
-  .page-heading h2 { font-size: 32px; }
-  .page-heading p,
-  .memory-meta p,
-  .empty-state p,
-  .envelope-card small,
-  .helper-line,
-  .login-explainer,
-  .auth-required p,
-  .hero-message { font-size: 13px; }
-
-  .edit-form label,
-  .monthsary-edit label,
-  .customize-row label,
-  .text-link,
-  .card-tools button,
-  .manage-list button,
-  .item-edit,
-  .item-delete,
-  .game-tabs > button,
-  .quiz-options button,
-  .game-result p,
-  .match-score,
-  .catch-hud,
-  .bucket-item > span,
-  .progress-label,
-  .privacy-pill { font-size: 12px; }
-
-  .date-card p,
-  .compliment-card p,
-  .quiz-question { font-size: 15px; }
-}
-
-@media (max-width: 540px) {
-  input:not([type="range"]),
-  textarea,
-  select {
-    font-size: 16px !important;
-  }
 }
