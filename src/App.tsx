@@ -517,7 +517,7 @@ function App() {
 
     <AnimatePresence>{secret && <Modal title="a little something for you" close={() => setSecret('')}><div className="secret-message"><span>💌</span><p>{secret}</p><Heart size={19} fill="currentColor" /></div></Modal>}</AnimatePresence>
     <AnimatePresence>{compliment && <Modal title="one tiny truth" close={() => setCompliment('')}><div className="secret-message"><span>🌷</span><p>{compliment}</p><button className="button button-soft" onClick={showCompliment}>one more ♡</button></div></Modal>}</AnimatePresence>
-    <AnimatePresence>{letterOpen && <Modal title={letterOpen.title} close={() => setLetterOpen(null)}><div className="letter-paper"><span className="handwritten">my dearest,</span><p>{letterOpen.message}</p><span className="handwritten signature">always yours ♡</span>
+    <AnimatePresence>{letterOpen && <Modal className="letter-modal" title={letterOpen.title} close={() => setLetterOpen(null)}><div className="letter-paper"><span className="handwritten">my dearest,</span><p>{letterOpen.message}</p><span className="handwritten signature">always yours ♡</span>
       {letterOpen.audioId && (() => {
         const song = allSongs.find((item) => item.id === letterOpen.audioId)
         return song
@@ -565,9 +565,9 @@ function PageHeading({ eyebrow, title, text }: { eyebrow: string; title: string;
 function EmptyState({ icon, title, text }: { icon: string; title: string; text: string }) {
   return <div className="empty-state"><span>{icon}</span><h3>{title}</h3><p>{text}</p></div>
 }
-function Modal({ title, close, children }: { title: string; close: () => void; children: React.ReactNode }) {
+function Modal({ title, close, children, className }: { title: string; close: () => void; children: React.ReactNode; className?: string }) {
   return <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={close}>
-    <motion.div className="modal-card" role="dialog" aria-modal="true" aria-label={title} initial={{ y: 20, scale: .97 }} animate={{ y: 0, scale: 1 }} exit={{ y: 12, scale: .98 }} onClick={(event) => event.stopPropagation()}>
+    <motion.div className={`modal-card ${className ?? ''}`} role="dialog" aria-modal="true" aria-label={title} initial={{ y: 20, scale: .97 }} animate={{ y: 0, scale: 1 }} exit={{ y: 12, scale: .98 }} onClick={(event) => event.stopPropagation()}>
       <button className="modal-close" aria-label="Close" onClick={close}><X size={18} /></button><span className="eyebrow">♡ just between us ♡</span><h3>{title}</h3>{children}</motion.div></motion.div>
 }
 function PickerCard({ emoji, title, items }: { emoji: string; title: string; items: string[] }) {

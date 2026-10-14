@@ -92,6 +92,15 @@ button:not(:disabled) { cursor: pointer; }
 .auth-required { min-height:350px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:35px 22px; }.auth-required > span { font-size:38px;color:#c8798b; }.auth-required h2 { font:36px "Sacramento",cursive;color:#805f6c;margin:8px 0; }.auth-required p { max-width:360px;color:#9a8389;font-size:12px;line-height:1.7;margin:0 0 18px; }
 .modal-backdrop { position:fixed;z-index:40;inset:0;background:#4e343b66;display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px); }.modal-card { position:relative;width:min(470px,100%);max-height:min(85vh,720px);overflow:auto;padding:27px 28px;background:#fffdf9;background-image:radial-gradient(#eadbd1 .5px,transparent .5px);background-size:12px 12px;border:1px solid #f0e5dc;border-radius:18px;box-shadow:0 20px 60px #402b3030; }.modal-card > h3 { font:29px "Sacramento",cursive;color:#805e6b;margin:7px 28px 16px 0; }.modal-close { position:absolute;right:14px;top:14px;width:31px;height:31px;border:1px solid #f0e2df;border-radius:50%;background:#fff;color:#a47b82;display:grid;place-items:center; }.edit-form { display:grid;gap:11px; }.edit-form label { display:grid;gap:5px;color:#9c767f;font-size:10px;font-weight:800; }.edit-form input,.edit-form textarea,.edit-form select { width:100%;border:1px solid #ecdfdc;border-radius:9px;background:#fff;padding:9px 10px;color:#68545b;font-size:11px; }.edit-form textarea { resize:vertical;line-height:1.6; }.edit-form input[type=file] { padding:7px; }.login-explainer { color:#958084;font-size:11px;line-height:1.6;margin:0 0 4px; }.secret-message { display:grid;justify-items:center;text-align:center;gap:9px;color:#c77989;padding:8px; }.secret-message > span { font-size:39px; }.secret-message p { color:#826b73;font:24px "Sacramento",cursive;max-width:340px; }.letter-paper { min-height:200px;padding:20px 23px;background:repeating-linear-gradient(transparent 0 28px,#efe6dc 29px),#fffef9;border:1px solid #f0e5d7;box-shadow:0 5px 16px #745a4d10; }.letter-paper p { line-height:2; }.photo-viewer { text-align:center; }.photo-viewer img { max-width:100%;max-height:55vh;object-fit:contain;border-radius:9px; }.photo-viewer > span { display:grid;place-items:center;min-height:170px;background:#f8e9e9;color:#c47d8a;font-size:48px;border-radius:9px; }.photo-viewer p { color:#816b72;font:22px "Sacramento",cursive; }.photo-viewer small { color:#ad9699;font-size:10px; }
 
+.letter-modal { width:min(620px,100%); }
+.letter-modal > h3 { font:700 clamp(26px,5vw,34px)/1.2 "DM Sans","Nunito",sans-serif; color:#725460; overflow-wrap:anywhere; }
+.letter-paper { padding:clamp(20px,5vw,34px); }
+.letter-paper .handwritten { display:block; font:28px/1.3 "Sacramento",cursive; color:#795767; }
+.letter-paper p { margin:12px 0 20px; color:#59464d; font:italic 18px/1.8 "DM Sans","Nunito",sans-serif; white-space:pre-wrap; overflow-wrap:anywhere; }
+.letter-paper .signature { text-align:right; font-size:30px; }
+.letter-audio { margin-top:22px; }
+.letter-owner-note { display:block; margin-top:10px; font-size:13px; line-height:1.6; }
+
 @media (max-width: 780px) {
   .topbar { padding:0 16px; }.nav-links { justify-content:flex-start;padding:0 11px; }.nav-link { padding:9px 11px; }.main-content { padding:25px 16px 20px; }
   .hero-card { padding:39px 7% 27px; }.hero-photo { right:8%; top:92px; width:180px; }.photo-area { height:150px; }.hero-card h1 { font-size:70px; }.hero-message { max-width:280px; }.hero-card:before { right:0;top:42px;width:310px;height:310px; }
@@ -116,6 +125,14 @@ button:not(:disabled) { cursor: pointer; }
   .hero-photo { position:relative;top:auto;right:auto;order:4;width:clamp(139px,33vw,180px);margin:18px 8px 12px auto; }
   .hero-actions { order:5; }
   .counter-card { order:6; }
+}
+
+@media (max-width: 540px) {
+  .modal-backdrop { padding:12px; }
+  .letter-modal { padding:24px 16px; }
+  .letter-paper { padding:18px 15px; }
+  .letter-paper .handwritten { font-size:25px; }
+  .letter-paper p { font-size:17px; line-height:1.8; }
 }
 
 @media (max-width: 340px) {
